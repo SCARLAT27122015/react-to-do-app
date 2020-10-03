@@ -1,16 +1,29 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import './App.css';
-import {Button, FormControl, FormHelperText, Input, InputLabel} from '@material-ui/core';
+import {Button, FormControl, Input, InputLabel} from '@material-ui/core';
+import Todo from './Todo';
+import db from './firebase';
+import firebase from 'firebase';
 
 
 function App() {
-  const [Todos, setTodos] = useState(['First task', 'Second task']);
+  const [Todos, setTodos] = useState([]);
   const [Entry, setEntry] = useState('');
   
   const addTodo = () => {
-    setTodos([...Todos, Entry]);
+    db.collection('todos').add({
+      task: Entry,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    });
     setEntry('');
   }
+
+  useEffect(() => {
+    db.collection('todos').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
+      setTodos(snapshot.docs.map(doc => doc.data().task))
+    });
+  }, []);
+
 
   return (
     <div className="App">
@@ -29,7 +42,7 @@ function App() {
       
       <ul>
         {Todos.map((todo,i) => 
-          <li key={i}>{ todo }</li>)}
+          <Todo key={i} todo={todo}/>)}
       </ul>
     </div>
   );
