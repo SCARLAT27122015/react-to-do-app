@@ -20,7 +20,10 @@ function App() {
 
   useEffect(() => {
     db.collection('todos').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
-      setTodos(snapshot.docs.map(doc => doc.data().task))
+      setTodos(snapshot.docs.map(doc => ({
+        id: doc.id ,
+        task: doc.data().task})
+      ))
     });
   }, []);
 
