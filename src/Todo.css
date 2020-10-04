@@ -1,4 +1,8 @@
 .todo__list{
     text-align: center;
+    background-color: rgb(201, 201, 201);
+    margin-bottom: 20px !important;
+    width: 200px;
+    border-radius: 20px;
 }
 
